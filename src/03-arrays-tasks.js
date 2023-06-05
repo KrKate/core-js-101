@@ -460,12 +460,21 @@ function sortCitiesArray(arr) {
  *           [0,0,0,0,1]]
  * Array.from(arrayLike[, mapFn[, thisArg]])
  * https://doka.guide/js/array-from/
+ * i - ряд, j - колонка
+ * i1j1 i1j2 i1j3
+ * i2j1 i2j2 j2j3
+ * i3j1 i3j2 i3j3  т.е. если у i и j совпадают символы, то ставим единицу
+ * заполнить массив массивами с 0 в количестве n (new Array(arrayLength))
  */
 
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  // return Array.from({length:n}, function(value, index){
+  //   return ;
+  // })
+  const result = Array(n).fill().map(() => Array(n).fill(0));
+  return result.map((row, i) => row.map((any, j) => (i === j ? 1 : 0)));
 }
-
+// console.log(getIdentityMatrix(5))
 /**
  * Creates an array of integers from the specified start to end (inclusive)
  *
@@ -479,9 +488,10 @@ function getIdentityMatrix(/* n */) {
  *     0, 100 => [ 0, 1, 2, ..., 100 ]
  *     3, 3   => [ 3 ]
  */
-function getIntervalArray(/* start, end */) {
-  throw new Error('Not implemented');
+function getIntervalArray(start, end) {
+  return Array(end - start + 1).fill().map((any, index) => start + index);
 }
+// console.log(getIntervalArray(1, 5));
 
 /**
  * Returns array containing only unique values from the specified array.
@@ -554,9 +564,12 @@ function group(array, keySelector, valueSelector) {
  * @example
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], (x) => x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
+ *  Метод flatMap() позволяет сформировать массив,
+ *  применяя функцию к каждому элементу, затем уменьшает вложенность,
+ *  делая этот массив плоским, и возвращает его.
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.flatMap(childrenSelector);
 }
 
 /**
