@@ -424,8 +424,32 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const separator = '/';
+  const paths = pathes.map((path) => path.split(separator));
+  /* [
+  [ '', 'web', 'images', 'image1.png' ],
+  [ '', 'web', 'images', 'image2.png' ]
+] */
+  const minLenght = Math.min(...paths.map((path) => path.length)); // 4
+  let commonPath = '';
+
+  for (let i = 0; i < minLenght; i += 1) {
+    const currentSegment = paths[0][i];
+    let isCommon = true;
+    for (let j = 1; j < paths.length; j += 1) {
+      if (paths[j][i] !== currentSegment) {
+        isCommon = false;
+        break;
+      }
+    }
+    if (isCommon) {
+      commonPath += currentSegment + separator;
+    } else {
+      break;
+    }
+  }
+  return commonPath;
 }
 
 
@@ -445,10 +469,29 @@ function getCommonDirectoryPath(/* pathes */) {
  *                        [[ 4 ],
  *   [[ 1, 2, 3]]    X     [ 5 ],          =>     [[ 32 ]]
  *                         [ 6 ]]
- *
+ * число столбцов матрицы A равно числу строк матрицы B
+ * C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0] + A[0][2]*B[2][0]
+ * C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1] + A[0][2]*B[2][1]
+ * C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0] + A[1][2]*B[2][0]
+ * C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1] + A[1][2]*B[2][1]
+ * колонки m[0].length, строки m.length
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  if (m1[0].length !== m2.length) {
+    throw new Error('Invalid matrix');
+  }
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    result[i] = [];
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let sum = 0;
+      for (let k = 0; k < m2.length; k += 1) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
 }
 
 
@@ -481,9 +524,42 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ],       =>  undefined
  *    [    ,   ,    ]]
  *
+ * [ [i0j0 i0j1 i0j2]
+ *   [i1j0 i1j1 i1j2]
+ *   [i2j0 i2j1 i2j2]
+ * ]
+ * выигрыш - одинаковое i/j, i=j
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  // строки i0 i1 i2
+  for (let i = 0; i < 3; i += 1) {
+    if (position[i][0] === position[i][1] && position[i][1] === position[i][2]) {
+      if (position[i][0] !== undefined) {
+        return position[i][0];
+      }
+    }
+  }
+  // столбцы 0j 1j 2j
+  for (let j = 0; j < 3; j += 1) {
+    if (position[0][j] === position[1][j] && position[1][j] === position[2][j]) {
+      if (position[0][j] !== undefined) {
+        return position[0][j];
+      }
+    }
+  }
+  // диагональ 00 11 22
+  if (position[0][0] === position[1][1] && position[1][1] === position[2][2]) {
+    if (position[0][0] !== undefined) {
+      return position[0][0];
+    }
+  }
+  // диагональ 02 11 20
+  if (position[0][2] === position[1][1] && position[1][1] === position[2][0]) {
+    if (position[0][2] !== undefined) {
+      return position[0][2];
+    }
+  }
+  return undefined;
 }
 
 
